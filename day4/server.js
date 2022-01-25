@@ -81,7 +81,7 @@ router.post("/addTasks", (req, res) => {
 
 router.put("/tasks/:index", (req, res) => {
   const index = req.params.index;
-  const { title, description, status } = req.body;
+  const { description, status } = req.body;
   console.log(index);
   console.log(req.body);
   fs.readFile(__dirname + "/tasks.json", (err, data) => {
@@ -89,11 +89,12 @@ router.put("/tasks/:index", (req, res) => {
       console.log(err);
     } else {
       const tasks = JSON.parse(data);
-      const duplicateTitle = tasks.find((task) => task.title === title);
+      const duplicateTitle = tasks.find(
+        (task) => task.title === tasks[index].title
+      );
       if (duplicateTitle) {
         res.send("Task already exists");
       } else {
-        tasks[index].title = title;
         tasks[index].description = description;
         tasks[index].status = status;
         fs.writeFile(
